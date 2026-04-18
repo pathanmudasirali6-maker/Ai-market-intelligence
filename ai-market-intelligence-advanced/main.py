@@ -1,11 +1,17 @@
 from fastapi import FastAPI, Query, BackgroundTasks
-from app.database import raw_collection, processed_collection
 from app.services import fetch_news
 from app.utils import get_sentiment, extract_keywords, trend_score
 from app.cache import cache
 import logging
+from pymongo import MongoClient
 
 logging.basicConfig(level=logging.INFO)
+
+# MongoDB connection
+client = MongoClient('mongodb://localhost:27017/')
+db = client['ai_market_intelligence']
+raw_collection = db['raw_articles']
+processed_collection = db['processed_articles']
 
 app = FastAPI()
 
@@ -62,7 +68,7 @@ def insights():
 @app.get("/search")
 def search(q: str):
     return list(processed_collection.find(
-        {"keywords": q.lower()},
+        {"keywords": {"$in": [q.lower()]}},
         {"_id": 0}
     ))
 
