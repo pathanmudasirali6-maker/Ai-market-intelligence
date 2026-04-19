@@ -1,6 +1,8 @@
 fastapi
-uvicorn
-pymongo
+uvicorn[standard]
+pymongo[srv]
 python-dotenv
 requests
 textblob
+cachetools
+dnspython
