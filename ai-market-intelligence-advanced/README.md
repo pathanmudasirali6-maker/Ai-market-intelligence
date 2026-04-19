@@ -1,15 +1,11 @@
-# AI Market Intelligence API (Advanced)
+# AI Market Intelligence API
 
 ## Features
-- Background ingestion (FastAPI BackgroundTasks)
-- Caching (TTLCache)
-- MongoDB integration
+- News API integration
+- MongoDB storage
 - Sentiment analysis
 - Trend detection
-
-## Deployment (Render)
-- Uses render.yaml
-- Add environment variables in dashboard
+- FastAPI endpoints
 
 ## Run
 pip install -r requirements.txt
