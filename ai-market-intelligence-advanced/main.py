@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query, BackgroundTasks
+from database import get_db
 from app.services import fetch_news
 from app.utils import get_sentiment, extract_keywords, trend_score
 from app.cache import cache
