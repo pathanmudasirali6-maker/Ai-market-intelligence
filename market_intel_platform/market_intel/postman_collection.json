@@ -1,0 +1,227 @@
+{
+  "info": {
+    "name": "Market Intelligence Platform API",
+    "description": "Complete API collection for the AI-Powered Market Intelligence & Trend Analytics Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "market-intel-v1"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "description": "Change to your deployed URL"
+    }
+  ],
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Root / Welcome",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/",
+            "description": "API root with endpoint listing and cache stats"
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health",
+            "description": "Returns service health, DB status, and uptime"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ingestion",
+      "item": [
+        {
+          "name": "Ingest - All Categories (sync)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/ingest",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_size\": 20,\n  \"language\": \"en\"\n}"
+            },
+            "description": "Fetch articles from business, technology, science, health concurrently"
+          }
+        },
+        {
+          "name": "Ingest - Technology Category",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/ingest",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"technology\",\n  \"page_size\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Ingest - Custom Query",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/ingest",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"artificial intelligence\",\n  \"page_size\": 15\n}"
+            }
+          }
+        },
+        {
+          "name": "Ingest - Background Task",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/ingest?background=true",
+              "query": [{"key": "background", "value": "true"}]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"business\",\n  \"page_size\": 20\n}"
+            },
+            "description": "Non-blocking background ingestion. Returns task_id."
+          }
+        },
+        {
+          "name": "Check Task Status",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/ingest/task/{{task_id}}",
+            "description": "Replace {{task_id}} with ID from background ingest response"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Trends - Last 7 Days",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/trends?days=7&top_n=20",
+              "query": [
+                {"key": "days", "value": "7"},
+                {"key": "top_n", "value": "20"}
+              ]
+            },
+            "description": "Returns top 20 trending keywords with velocity and sentiment distribution"
+          }
+        },
+        {
+          "name": "Trends - Last 24 Hours",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/trends?days=1&top_n=10",
+              "query": [
+                {"key": "days", "value": "1"},
+                {"key": "top_n", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Insights - Last 7 Days",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/insights?days=7",
+              "query": [{"key": "days", "value": "7"}]
+            },
+            "description": "Sentiment breakdown, top sources, time-series with growth rates"
+          }
+        },
+        {
+          "name": "Insights - Last 30 Days",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/insights?days=30",
+              "query": [{"key": "days", "value": "30"}]
+            }
+          }
+        },
+        {
+          "name": "Analytics Summary",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/analytics/summary",
+            "description": "System-wide stats: total docs, processing rate, cache stats, date range"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search - Basic",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/search?q=artificial intelligence&page=1&page_size=10",
+              "query": [
+                {"key": "q", "value": "artificial intelligence"},
+                {"key": "page", "value": "1"},
+                {"key": "page_size", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search - Filter by Sentiment",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/search?q=market&sentiment=positive&page_size=5",
+              "query": [
+                {"key": "q", "value": "market"},
+                {"key": "sentiment", "value": "positive"},
+                {"key": "page_size", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search - Filter by Category + Days",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/search?q=economy&category=business&days=7&page_size=10",
+              "query": [
+                {"key": "q", "value": "economy"},
+                {"key": "category", "value": "business"},
+                {"key": "days", "value": "7"},
+                {"key": "page_size", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search - Paginated",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/search?q=technology&page=2&page_size=5",
+              "query": [
+                {"key": "q", "value": "technology"},
+                {"key": "page", "value": "2"},
+                {"key": "page_size", "value": "5"}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
